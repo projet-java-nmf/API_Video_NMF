@@ -9,6 +9,8 @@ import com.wcs.Security.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +26,11 @@ public class UserImplem implements UserService {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public User createUser(User user) {
@@ -53,5 +58,20 @@ public class UserImplem implements UserService {
         if (role.isPresent() && user.isPresent()){
             user.get().getRoles().add(role.get());
         }
+    }
+
+    @Override
+    public String login (String email, String password){
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()){
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            email,
+                            password
+                    )
+            );
+            return jwtService.generateToken(user.get());
+        }
+        return "user not found";
     }
 }

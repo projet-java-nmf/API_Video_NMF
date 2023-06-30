@@ -12,5 +12,5 @@ public interface UserService {
     List<User> getAllUser ();
     Optional<User> getUserByEmail (String email);
     void addRoleToUser (String email, RoleName roleName);
-
+    String login (String email, String password);
 }
