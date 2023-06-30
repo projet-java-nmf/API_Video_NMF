@@ -51,19 +51,21 @@ public class UserImplem implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String email, RoleName roleName) {
+    public void addRoleToUser(String email, RoleName roleName) throws Exception {
         Optional<Role> role = roleRepository.findByName(roleName);
         Optional<User> user = userRepository.findByEmail(email);
 
-        if (role.isPresent() && user.isPresent()){
+        if (role.isPresent() && user.isPresent()) {
             user.get().getRoles().add(role.get());
+        } else {
+            throw new Exception();
         }
     }
 
     @Override
-    public String login (String email, String password){
+    public String login(String email, String password) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()){
+        if (user.isPresent()) {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             email,
@@ -71,7 +73,8 @@ public class UserImplem implements UserService {
                     )
             );
             return jwtService.generateToken(user.get());
+        } else {
+            throw new Exception();
         }
-        return "user not found";
     }
 }

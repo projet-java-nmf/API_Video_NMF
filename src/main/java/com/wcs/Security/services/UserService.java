@@ -11,6 +11,6 @@ public interface UserService {
     User createUser (User user);
     List<User> getAllUser ();
     Optional<User> getUserByEmail (String email);
-    void addRoleToUser (String email, RoleName roleName);
-    String login (String email, String password);
+    void addRoleToUser (String email, RoleName roleName) throws Exception;
+    String login (String email, String password) throws Exception;
 }
