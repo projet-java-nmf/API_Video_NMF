@@ -37,10 +37,8 @@ public class JwtService {
             UserDetails userDetails
     ) {
         Map<String , String> claims = new HashMap<>();
-        claims.put("test", "test" );
         return Jwts
                 .builder()
-                .setClaims(claims)
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
