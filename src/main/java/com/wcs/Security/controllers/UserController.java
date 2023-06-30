@@ -1,11 +1,15 @@
 package com.wcs.Security.controllers;
 
 import com.wcs.Security.enums.RoleName;
+import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,20 +25,19 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @PostMapping("/sign-up-user")
-    public void createUser (@RequestBody User user){
-        User result = userService.createUser(user);
-        userService.addRoleToUser(result.getEmail(), RoleName.USER);
+    @GetMapping("getUserName")
+    public String getName (Authentication authentication){
+        return authentication.getName();
     }
 
-    @PostMapping("/sign-up-admin")
-    public void createAdmin (@RequestBody User user){
-        User result = userService.createUser(user);
-        userService.addRoleToUser(result.getEmail(), RoleName.ADMIN);
+    @GetMapping("getRoles")
+    public List<String> gettroles (Authentication authentication){
+        List<String> roles = new ArrayList<>();
+        for (GrantedAuthority grantedAuthority :authentication.getAuthorities()){
+            roles.add(grantedAuthority.getAuthority());
+        }
+        return roles;
     }
 
-    @PostMapping ("/login")
-    public String login (@RequestBody Map<String, String> request){
-        return userService.login(request.get("email"), request.get("password"));
-    }
+
 }
