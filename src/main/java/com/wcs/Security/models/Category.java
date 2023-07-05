@@ -13,18 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Video {
-
+public class Category {
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String title;
-    private String description;
-    private String publicationDate;
-    private boolean isPrivate;
-    private boolean hasTeaser;
-
-    //L'url de la video : "l'endroit où vous allez stocker la vidéo"
+    private String name;
 
 }
