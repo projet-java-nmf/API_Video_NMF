@@ -32,6 +32,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    //JOINTURE MANY TO MANY SIMPLE USER & ROLE
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
                     name = "user_roles",
@@ -42,6 +43,13 @@ public class User implements UserDetails {
                      }
             )
     List<Role> roles = new ArrayList<>();
+
+    //JOINTURE USER & VIDEO
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
+    private List<UserVideo> favoritesList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
