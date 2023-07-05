@@ -34,10 +34,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**")
                 .permitAll()
-                .requestMatchers("/users/**")
-                .hasAuthority("ADMIN")
+
+                //.requestMatchers("/users/**")
+                //.hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
+
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

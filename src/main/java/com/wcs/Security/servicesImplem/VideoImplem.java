@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class Videoimplem implements VideoService {
+public class VideoImplem implements VideoService {
 
     @Autowired
     VideoRepository videoRepository;
@@ -26,6 +26,11 @@ public class Videoimplem implements VideoService {
     }
 
     @Override
+    public List<Video> getAllPublicVideos() {
+        return null;
+    }
+
+    @Override
     public Video getVideoById(Long id) {
         Optional<Video> video = videoRepository.findById(id);
         if (video.isPresent()){
@@ -33,4 +38,5 @@ public class Videoimplem implements VideoService {
         }
         return null;
     }
+
 }

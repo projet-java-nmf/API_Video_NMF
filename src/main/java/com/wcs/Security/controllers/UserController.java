@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -25,13 +25,13 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @GetMapping("getUserName")
+    @GetMapping("/getUserName")
     public String getName (Authentication authentication){
         return authentication.getName();
     }
 
-    @GetMapping("getRoles")
-    public List<String> gettroles (Authentication authentication){
+    @GetMapping("/getRoles")
+    public List<String> getRoles (Authentication authentication){
         List<String> roles = new ArrayList<>();
         for (GrantedAuthority grantedAuthority :authentication.getAuthorities()){
             roles.add(grantedAuthority.getAuthority());
@@ -39,5 +39,18 @@ public class UserController {
         return roles;
     }
 
+    // MODIFIER SON NOM ET PRENOM : updateFirstName(), updateLastName()
+
+    // MODIFIER SON MOT DE PASSE : updatePassword()
+
+    // SUPPRIMER SON COMPTE USER : deleteUser()
+
+    // MODIFIER LE ROLE D'UN USER : updateRole()
+
+    // CREER UN ADMIN (A PARTIR DE L'ESPACE ADMIN) : createAdminFromAdminSession()
+
+    // EXPORTER LISTE DES USERS DANS UN FICHIER CSV : downloadListUsers()
+
+    // REINITIALISER SON MOT DE PASSE : resetPassword()
 
 }

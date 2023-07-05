@@ -28,7 +28,7 @@ public class AuthController {
             userService.addRoleToUser(result.getEmail(), RoleName.USER);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Erreur", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -40,17 +40,17 @@ public class AuthController {
             userService.addRoleToUser(result.getEmail(), RoleName.ADMIN);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Erreur", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping ("/login")
     public ResponseEntity<?> login (@RequestBody Map<String, String> request){
      try {
-         userService.login(request.get("email"), request.get("password"));
-         return new ResponseEntity<>("Success", HttpStatus.OK);
+         String token = userService.login(request.get("email"), request.get("password"));
+         return new ResponseEntity<>(token, HttpStatus.OK);
      }catch (Exception e){
-         return new ResponseEntity<>("Erreur", HttpStatus.INTERNAL_SERVER_ERROR);
+         return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
      }
     }
 }

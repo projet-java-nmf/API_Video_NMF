@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/videos")
 public class VideoController {
 
     @Autowired
     VideoService videoService;
 
     // SAVE UNE VIDEO
-    @PostMapping("/videos")
+    @PostMapping("/upload-video")
     public ResponseEntity<Video> createVideo(@RequestBody Video video){
         return
                 new ResponseEntity<>(
@@ -26,7 +27,7 @@ public class VideoController {
     }
 
     // GET TOUTES LES VIDEOS
-    @GetMapping("videos")
+    @GetMapping("")
     public ResponseEntity< List<Video> > getAllVideo(){
         return
                 new ResponseEntity<>(
@@ -36,7 +37,7 @@ public class VideoController {
     }
 
     // GET UNE VIDEO
-    @GetMapping("videos/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Video> getVideoById(@PathVariable Long id) {
         Video video = videoService.getVideoById(id);
         if (video != null){
@@ -53,5 +54,20 @@ public class VideoController {
                     );
         }
     }
+
+    //GET TOUTES LES VIDEOS PUBLIC
+    @GetMapping("/{isPrivate}")
+    public List<Video> getAllPublicVideos(@PathVariable Boolean isPrivate){
+        //return videoService.getAllPublicVideos(isPrivate);
+        return null;
+    }
+
+    // MODIFIER UNE VIDEO : updateVideo()
+
+    // SUPPRIMER UNE VIDEO : deleteVideo()
+
+    // MODIFIER L'ACCES PUBLIC/PRIVE D'UNE VIDEO : updateIsPrivate()
+
+    // LIRE 20 SECONDES D'UNE VIDEO (TEASER VIDEO LORS D'UN HOVER) : readTeaserVideo()
 
 }
