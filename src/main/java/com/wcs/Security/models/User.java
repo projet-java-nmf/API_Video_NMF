@@ -32,6 +32,14 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    private int verificationEmailCode;
+
+    // Pour les test , on le met a true
+
+    // A ENLEVER !!!!!!!! ou set a true !!!!!!!!
+    private boolean isEmailVerified = true;
+
+
     //JOINTURE MANY TO MANY SIMPLE USER & ROLE
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
