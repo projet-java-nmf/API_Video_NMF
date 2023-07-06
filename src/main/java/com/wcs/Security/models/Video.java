@@ -22,7 +22,7 @@ public class Video {
     private String title;
     private String description;
     private String publicationDate;
-    private boolean isPrivate;
+    private boolean privated;
     private boolean hasTeaser;
 
     //JOINTURE MANY TO MANY SIMPLE VIDEO & CATEGORY

@@ -39,6 +39,8 @@ public class UserController {
         return roles;
     }
 
+    // DECONNECTION DU USER/ADMIN : logout()
+
     // MODIFIER SON NOM ET PRENOM : updateFirstName(), updateLastName()
 
     // MODIFIER SON MOT DE PASSE : updatePassword()
