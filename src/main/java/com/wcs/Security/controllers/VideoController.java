@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/videos")
+@RequestMapping("videos")
 public class VideoController {
 
     @Autowired
@@ -39,8 +39,10 @@ public class VideoController {
     // GET UNE VIDEO
     @GetMapping("/{id}")
     public ResponseEntity<Video> getVideoById(@PathVariable Long id) {
+        System.out.println("1");
         Video video = videoService.getVideoById(id);
         if (video != null){
+            System.out.println("2");
             return
                     new ResponseEntity<>(
                         video,
@@ -56,12 +58,12 @@ public class VideoController {
     }
 
     //GET TOUTES LES VIDEOS PUBLIC
-    @GetMapping("/{isPrivate}")
+  /*  @GetMapping("/{isPrivate}")
     public List<Video> getAllPublicVideos(@PathVariable Boolean isPrivate){
         //return videoService.getAllPublicVideos(isPrivate);
         return null;
     }
-
+*/
     // MODIFIER UNE VIDEO : updateVideo()
 
     // SUPPRIMER UNE VIDEO : deleteVideo()
