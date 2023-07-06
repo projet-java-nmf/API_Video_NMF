@@ -1,6 +1,7 @@
 package com.wcs.Security.controllers;
 
 import com.wcs.Security.enums.RoleName;
+import com.wcs.Security.exceptions.UserException;
 import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import org.apache.coyote.Response;
@@ -19,11 +20,12 @@ public class AuthController {
 
     @PostMapping("/sign-up-user")
     public ResponseEntity<String> createUser (@RequestBody User user){
-        User result = userService.createUser(user);
-
         try {
+            User result = userService.createUser(user);
             userService.addRoleToUser(result.getEmail(), RoleName.USER);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
+        }catch (UserException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -31,11 +33,12 @@ public class AuthController {
 
     @PostMapping("/sign-up-admin")
     public ResponseEntity<String> createAdmin (@RequestBody User user){
-        User result = userService.createUser(user);
-
         try {
+            User result = userService.createUser(user);
             userService.addRoleToUser(result.getEmail(), RoleName.ADMIN);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
+        }catch (UserException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }

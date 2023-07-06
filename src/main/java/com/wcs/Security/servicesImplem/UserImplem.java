@@ -1,6 +1,7 @@
 package com.wcs.Security.servicesImplem;
 
 import com.wcs.Security.enums.RoleName;
+import com.wcs.Security.exceptions.UserException;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
 import com.wcs.Security.repositories.RoleRepository;
@@ -38,23 +39,33 @@ public class UserImplem implements UserService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public User createUser(User user) {
-        String password = user.getPassword();
-        String passwordEncoded = passwordEncoder.encode(password);
-        user.setPassword(passwordEncoded);
-        Random random = new Random();
+    public User createUser(User user) throws UserException {
+     // Checkif is already created
 
-        int code =  random.nextInt(1000,10000);
-        user.setVerificationEmailCode(
-                code
-        );
-        emailService.sendEmail(
-                user.getEmail(),
-                "Vérification de l'adresse email",
-                "Voila le code de vérification de votre email : " + code
-        );
+        Optional<User> userChecked = userRepository.findByEmail(user.getEmail());
+        if(userChecked.isPresent()){
+            throw  new UserException("L'utilisateur entré existe déja. Veuillez entrez un autre utilisateur .");
+        }else{
+            String password = user.getPassword();
+            String passwordEncoded = passwordEncoder.encode(password);
+            user.setPassword(passwordEncoded);
+            Random random = new Random();
 
-        return userRepository.save(user);
+            int code =  random.nextInt(1000,10000);
+            user.setVerificationEmailCode(
+                    code
+            );
+            if(!user.isEmailVerified()) {
+                emailService.sendEmail(
+                        user.getEmail(),
+                        "Vérification de l'adresse email",
+                        "Voila le code de vérification de votre email : " + code
+                );
+            }
+            return userRepository.save(user);
+        }
+
+
     }
 
     @Override

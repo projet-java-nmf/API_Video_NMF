@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User createUser (User user);
+    User createUser (User user) throws Exception;
     List<User> getAllUser ();
     Optional<User> getUserByEmail (String email);
     void addRoleToUser (String email, RoleName roleName) throws Exception;
