@@ -13,4 +13,7 @@ public interface UserService {
     Optional<User> getUserByEmail (String email);
     void addRoleToUser (String email, RoleName roleName) throws Exception;
     String login (String email, String password) throws Exception;
+
+    boolean emailConfirmation(String email, int code);
+
 }

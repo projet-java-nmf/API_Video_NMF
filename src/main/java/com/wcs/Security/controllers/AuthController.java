@@ -7,10 +7,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -46,11 +43,36 @@ public class AuthController {
 
     @PostMapping ("/login")
     public ResponseEntity<?> login (@RequestBody Map<String, String> request){
-     try {
-         String token = userService.login(request.get("email"), request.get("password"));
-         return new ResponseEntity<>(token, HttpStatus.OK);
-     }catch (Exception e){
-         return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
-     }
+
+        try{
+            String response = userService.login(request.get("email"), request.get("password"));
+            if(response == null){
+                return new ResponseEntity<>(
+                        "Email ou le mot de passe sont incorrect",
+                        HttpStatus.UNAUTHORIZED
+                );
+            }
+            if(response.equals("-1") ){
+                return new ResponseEntity<>(
+                        "Vous n'avez pas encore vérifié votre email",
+                        HttpStatus.UNAUTHORIZED
+                );
+            }else{
+                return new ResponseEntity<>(
+                        response,
+                        HttpStatus.OK
+                );
+
+            }
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/email-confirmation/{email}")
+    boolean emailConfirmation(@PathVariable String email, @RequestBody Map <String , Integer> request){
+
+        return userService.emailConfirmation(email, request.get("code"));
     }
 }
