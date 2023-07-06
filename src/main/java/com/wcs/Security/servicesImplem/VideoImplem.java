@@ -26,11 +26,6 @@ public class VideoImplem implements VideoService {
     }
 
     @Override
-    public List<Video> getAllPublicVideos() {
-        return null;
-    }
-
-    @Override
     public Video getVideoById(Long id) {
         Optional<Video> video = videoRepository.findById(id);
         if (video.isPresent()){

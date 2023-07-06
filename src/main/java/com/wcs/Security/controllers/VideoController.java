@@ -1,6 +1,7 @@
 package com.wcs.Security.controllers;
 
 import com.wcs.Security.models.Video;
+import com.wcs.Security.repositories.VideoRepository;
 import com.wcs.Security.services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,9 @@ public class VideoController {
 
     @Autowired
     VideoService videoService;
+
+    @Autowired
+    VideoRepository videoRepository;
 
     // SAVE UNE VIDEO
     @PostMapping("/upload-video")
@@ -57,18 +61,37 @@ public class VideoController {
         }
     }
 
-    //GET TOUTES LES VIDEOS PUBLIC
-  /*  @GetMapping("/{isPrivate}")
-    public List<Video> getAllPublicVideos(@PathVariable Boolean isPrivate){
-        //return videoService.getAllPublicVideos(isPrivate);
+    // SUPPRIMER UNE VIDEO : deleteVideo()
+    @DeleteMapping("/delete")
+    public String deleteVideo(@RequestParam Long id) {
+        videoRepository.deleteById(id);
+
         return null;
     }
-*/
+  
     // MODIFIER UNE VIDEO : updateVideo()
+    @PutMapping("/update-video")
+    public String updateVideo(@ModelAttribute Video video) {
+        videoRepository.save(video);
+        return null;
+    }
 
-    // SUPPRIMER UNE VIDEO : deleteVideo()
+    //METHODE AVEC GET => MODIFIER L'ACCES PUBLIC/PRIVE D'UNE VIDEO
+    @PutMapping("/update-video2")
+    public Video updateVideo(Long id, String title, String description, String publicationDate, boolean Privated, boolean hasTeaser) {
+        Video videoToUpdate = videoRepository.findById(id).get();
+        //videoToUpdate.setDescription(description);
+        //videoToUpdate.setPublicationDate(publicationDate);
+        videoToUpdate.setPrivated(Privated);
+        //videoToUpdate.setHasTeaser(hasTeaser);
+        return videoRepository.save(videoToUpdate);
+    }
 
-    // MODIFIER L'ACCES PUBLIC/PRIVE D'UNE VIDEO : updateIsPrivate()
+    //GET TOUTES LES VIDEOS PUBLIC
+    @GetMapping("/public/{isPrivate}")
+    public List<Video> getAllPublicVideos(@PathVariable String isPrivate){
+        return videoRepository.findByPrivated(  isPrivate.equals("false") ? false : true);
+    }
 
     // LIRE 20 SECONDES D'UNE VIDEO (TEASER VIDEO LORS D'UN HOVER) : readTeaserVideo()
 

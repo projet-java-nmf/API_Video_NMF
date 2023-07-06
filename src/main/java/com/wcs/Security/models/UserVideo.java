@@ -24,6 +24,6 @@ public class UserVideo {
     @JoinColumn(name = "video_id")
     private Video video;
 
-    private boolean isFavorite;
+    private boolean Favorited;
 
 }
