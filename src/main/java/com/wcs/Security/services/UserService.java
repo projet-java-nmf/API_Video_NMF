@@ -13,4 +13,8 @@ public interface UserService {
     Optional<User> getUserByEmail (String email);
     void addRoleToUser (String email, RoleName roleName) throws Exception;
     String login (String email, String password) throws Exception;
+    User updateUser(Long id, User user);
+    String getAuthenticatedUserEmail();
+
+
 }

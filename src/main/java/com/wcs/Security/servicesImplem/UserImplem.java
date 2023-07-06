@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class UserImplem implements UserService {
     public void addRoleToUser(String email, RoleName roleName) throws Exception {
         Optional<Role> role = roleRepository.findByName(roleName);
         Optional<User> user = userRepository.findByEmail(email);
-
+        System.out.println(role.get().getName().name());
         if (role.isPresent() && user.isPresent()) {
             user.get().getRoles().add(role.get());
         } else {
@@ -76,5 +77,29 @@ public class UserImplem implements UserService {
         } else {
             throw new Exception();
         }
+    }
+
+    @Override
+    public User updateUser(Long id, User user) {
+        Optional<User> userInData = userRepository.findById(id);
+
+        if (userInData.isPresent()) {
+            if (user.getFirstname() != null) {
+                if (!user.getFirstname().equals("")) {
+                    userInData.get().setFirstname(user.getFirstname());
+                }
+            }
+            if (user.getLastname() != null) {
+                if (!user.getLastname().equals("")) {
+                    userInData.get().setLastname(user.getLastname());
+                }
+            }
+        }
+        return userInData.get();
+    }
+
+    @Override
+    public String getAuthenticatedUserEmail() {
+        return null;
     }
 }

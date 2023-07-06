@@ -41,6 +41,7 @@ public class UserController {
 
     // MODIFIER SON NOM ET PRENOM : updateFirstName(), updateLastName()
 
+
     // MODIFIER SON MOT DE PASSE : updatePassword()
 
     // SUPPRIMER SON COMPTE USER : deleteUser()
