@@ -22,8 +22,5 @@ public class Section {
             mappedBy = "section",
             cascade = CascadeType.ALL
     )
-    private List<SectionVideo> SectionList = new ArrayList<>();
-
-
-
+    private List<Video> videos = new ArrayList<>();
 }

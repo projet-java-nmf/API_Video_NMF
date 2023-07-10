@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -58,22 +59,9 @@ public class UserController {
         }
     }
 
-
     @DeleteMapping("")
     public ResponseEntity<Void> deleteUser (Authentication auth) {
         userService.deleteUser(auth.getName());
         return new ResponseEntity<Void>(HttpStatus.GONE);
     }
-    // MODIFIER SON MOT DE PASSE : updatePassword()
-
-    // SUPPRIMER SON COMPTE USER : deleteUser()
-
-    // MODIFIER LE ROLE D'UN USER : updateRole()
-
-    // CREER UN ADMIN (A PARTIR DE L'ESPACE ADMIN) : createAdminFromAdminSession()
-
-    // EXPORTER LISTE DES USERS DANS UN FICHIER CSV : downloadListUsers()
-
-    // REINITIALISER SON MOT DE PASSE : resetPassword()
-
 }

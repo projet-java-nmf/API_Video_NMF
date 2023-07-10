@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User createUser (User user);
+    User createUser (User user) throws Exception;
     List<User> getAllUser ();
     Optional<User> getUserByEmail (String email);
     void addRoleToUser (String email, RoleName roleName) throws Exception;
@@ -19,4 +19,7 @@ public interface UserService {
     @Transactional()
     void deleteUser(String email);
     List<Video> addVideoToFavorites(Long idVideo, String email);
+    boolean emailConfirmation(String email, int code);
+
+
 }

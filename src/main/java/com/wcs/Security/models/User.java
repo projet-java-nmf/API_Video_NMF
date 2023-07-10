@@ -32,6 +32,14 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    private int verificationEmailCode;
+
+    // Pour les test , on le met a true
+
+    // A ENLEVER !!!!!!!! ou set a true !!!!!!!!
+    private boolean isEmailVerified = true;
+
+
     //JOINTURE MANY TO MANY SIMPLE USER & ROLE
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
@@ -45,12 +53,16 @@ public class User implements UserDetails {
     List<Role> roles = new ArrayList<>();
 
     //JOINTURE USER & VIDEO
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL
+    @ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_videos",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },inverseJoinColumns = {
+            @JoinColumn(name = "video_id")
+    }
     )
     private List<Video> favoritesList = new ArrayList<>();
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
