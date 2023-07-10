@@ -49,7 +49,8 @@ public class User implements UserDetails {
             mappedBy = "user",
             cascade = CascadeType.ALL
     )
-    private List<UserVideo> favoritesList = new ArrayList<>();
+    private List<Video> favoritesList = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

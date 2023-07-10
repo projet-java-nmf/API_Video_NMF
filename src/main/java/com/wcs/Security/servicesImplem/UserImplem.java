@@ -3,17 +3,19 @@ package com.wcs.Security.servicesImplem;
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
+import com.wcs.Security.models.Video;
 import com.wcs.Security.repositories.RoleRepository;
 import com.wcs.Security.repositories.UserRepository;
+import com.wcs.Security.repositories.VideoRepository;
 import com.wcs.Security.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserImplem implements UserService {
 
+    @Autowired
+    VideoRepository videoRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -80,8 +84,8 @@ public class UserImplem implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) {
-        Optional<User> userInData = userRepository.findById(id);
+    public User updateUser(String email, User user) {
+        Optional<User> userInData = userRepository.findByEmail(email);
 
         if (userInData.isPresent()) {
             if (user.getFirstname() != null) {
@@ -94,12 +98,32 @@ public class UserImplem implements UserService {
                     userInData.get().setLastname(user.getLastname());
                 }
             }
+            if (user.getEmail() != null) {
+                if (!user.getEmail().equals("")) {
+                    userInData.get().setEmail(user.getEmail());
+                }
+            }
         }
         return userInData.get();
     }
 
     @Override
-    public String getAuthenticatedUserEmail() {
-        return null;
+    @Transactional()
+    public void deleteUser(String email) {
+        try {
+            userRepository.deleteById(userRepository.findByEmail(email).get().getId());
+        } catch (EmptyResultDataAccessException ex) {
+            throw new RuntimeException("Utilisateur introuvable avec l'identifiant : " + email);
+        }
+    }
+
+    @Override
+    public List<Video> addVideoToFavorites(Long idVideo, String email) {
+        Optional<User> userInData = userRepository.findByEmail(email);
+        if (userInData.isPresent()) {
+                userInData.get().getFavoritesList().add(videoRepository.findById(idVideo).get());
+                userRepository.save(userInData.get());
+        }
+        return userInData.get().getFavoritesList();
     }
 }

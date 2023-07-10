@@ -5,9 +5,16 @@ import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -50,19 +57,5 @@ public class AuthController {
          }catch (Exception e){
              return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
          }
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PutMapping("users/{id}")
-    public ResponseEntity<?> updateUser (@PathVariable Long id, @RequestBody User user){
-        try {
-            String authenticatedUserEmail = userService.getAuthenticatedUserEmail();
-            if (authenticatedUserEmail == null || !authenticatedUserEmail.equals(user.getEmail())) {
-                return new ResponseEntity<>("Error: Unauthorized", HttpStatus.UNAUTHORIZED);
-            }
-            return new ResponseEntity<>(userService.updateUser(id, user), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }
