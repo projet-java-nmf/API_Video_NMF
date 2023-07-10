@@ -8,5 +8,6 @@ public interface VideoService {
 
     Video createVideo(Video video);
     List<Video> getAllVideos();
+    List<Video> getVideosByCategory(Long idCategory);
     Video getVideoById(Long id);
 }

@@ -53,11 +53,16 @@ public class User implements UserDetails {
     List<Role> roles = new ArrayList<>();
 
     //JOINTURE USER & VIDEO
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL
+    @ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_videos",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },inverseJoinColumns = {
+            @JoinColumn(name = "video_id")
+    }
     )
-    private List<UserVideo> favoritesList = new ArrayList<>();
+    private List<Video> favoritesList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

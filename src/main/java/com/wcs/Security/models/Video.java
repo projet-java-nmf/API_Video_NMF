@@ -29,29 +29,10 @@ public class Video {
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "video_category",
-            joinColumns = {
-                    @JoinColumn(name = "video_id")
-            }, inverseJoinColumns = {
-                    @JoinColumn(name = "category_id")
-    }
+            joinColumns = @JoinColumn(name = "video_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    List<Category> categories = new ArrayList<>();
-
-    //JOINTURE VIDEO & USER
-    @OneToMany(
-            mappedBy = "video",
-            cascade = CascadeType.ALL
-    )
-    private List<UserVideo> favoritesList = new ArrayList<>();
-
-    //JOINTURE VIDEO & SECTION
-    @OneToMany(
-            mappedBy = "video",
-            cascade = CascadeType.ALL
-    )
-    private List<SectionVideo> SectionList = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 
     //L'url de la video : "l'endroit où vous allez stocker la vidéo"
-
-
 }
