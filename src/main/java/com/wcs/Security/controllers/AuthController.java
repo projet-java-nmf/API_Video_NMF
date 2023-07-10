@@ -6,6 +6,7 @@ import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,6 @@ public class AuthController {
 
     @PostMapping ("/login")
     public ResponseEntity<?> login (@RequestBody Map<String, String> request){
-
         try{
             String response = userService.login(request.get("email"), request.get("password"));
             if(response == null){

@@ -43,35 +43,25 @@ public class UserController {
         return roles;
     }
 
-    //GET FAVORITE LIST
-    @GetMapping("/getFavoriteList")
-    public ResponseEntity<List<Video>> getFavoriteList(Authentication authentication) {
-        Optional<User> user = userService.getUserByEmail(authentication.getName());
-        return
-                new ResponseEntity<>(
-                        user.get().getFavoritesList(),
-                        HttpStatus.OK
-                );
+    @PostMapping("/addVideoToFavorites")
+    public ResponseEntity<List<Video>> addVideoToFavorites(@RequestBody Long idVideo, Authentication auth){
+        return new ResponseEntity<>(
+                userService.addVideoToFavorites(idVideo, auth.getName()),
+                HttpStatus.OK
+        );
+    }
+    @PutMapping("")
+    public ResponseEntity<?> updateUser (Authentication auth, @RequestBody User user){
+        try {
+            return new ResponseEntity<>(userService.updateUser(auth.getName(), user), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    //AJOUT DES VIDEOS DANS FAVORIS DANS USER
-
-
-
-    // DECONNECTION DU USER/ADMIN : logout()
-
-    // MODIFIER SON NOM ET PRENOM : updateFirstName(), updateLastName()
-
-    // MODIFIER SON MOT DE PASSE : updatePassword()
-
-    // SUPPRIMER SON COMPTE USER : deleteUser()
-
-    // MODIFIER LE ROLE D'UN USER : updateRole()
-
-    // CREER UN ADMIN (A PARTIR DE L'ESPACE ADMIN) : createAdminFromAdminSession()
-
-    // EXPORTER LISTE DES USERS DANS UN FICHIER CSV : downloadListUsers()
-
-    // REINITIALISER SON MOT DE PASSE : resetPassword()
-
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteUser (Authentication auth) {
+        userService.deleteUser(auth.getName());
+        return new ResponseEntity<Void>(HttpStatus.GONE);
+    }
 }
