@@ -3,8 +3,11 @@ package com.wcs.Security.controllers;
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
+import com.wcs.Security.models.Video;
 import com.wcs.Security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -38,6 +42,21 @@ public class UserController {
         }
         return roles;
     }
+
+    //GET FAVORITE LIST
+    @GetMapping("/getFavoriteList")
+    public ResponseEntity<List<Video>> getFavoriteList(Authentication authentication) {
+        Optional<User> user = userService.getUserByEmail(authentication.getName());
+        return
+                new ResponseEntity<>(
+                        user.get().getFavoritesList(),
+                        HttpStatus.OK
+                );
+    }
+
+    //AJOUT DES VIDEOS DANS FAVORIS DANS USER
+
+
 
     // DECONNECTION DU USER/ADMIN : logout()
 
