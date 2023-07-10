@@ -18,9 +18,14 @@ public class Section {
     private Long id;
 
     //JOINTURE SECTION & VIDEO
-    @OneToMany(
-            mappedBy = "section",
-            cascade = CascadeType.ALL
+    @ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "section_videos",
+            joinColumns = {
+                    @JoinColumn(name = "section_id")
+            },inverseJoinColumns = {
+            @JoinColumn(name = "videos_id")
+    }
     )
     private List<Video> videos = new ArrayList<>();
 }

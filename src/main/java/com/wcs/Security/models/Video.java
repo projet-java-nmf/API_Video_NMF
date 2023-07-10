@@ -28,9 +28,12 @@ public class Video {
     //JOINTURE MANY TO MANY SIMPLE VIDEO & CATEGORY
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
-            name = "video_category",
-            joinColumns = @JoinColumn(name = "video_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "video_categories",
+            joinColumns = {
+                    @JoinColumn(name = "video_id")
+            },inverseJoinColumns = {
+            @JoinColumn(name = "category_id")
+    }
     )
     private List<Category> categories = new ArrayList<>();
 
