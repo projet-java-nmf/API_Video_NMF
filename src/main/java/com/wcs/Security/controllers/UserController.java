@@ -50,6 +50,7 @@ public class UserController {
                 HttpStatus.OK
         );
     }
+
     @PutMapping("")
     public ResponseEntity<?> updateUser (Authentication auth, @RequestBody User user){
         try {
