@@ -19,7 +19,7 @@ public class Section {
     private String name;
     private String description;
 
-    //JOINTURE SECTION & VIDEO
+    //JOINTURE MANY TO MANY SECTION & VIDEO
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "section_videos",
