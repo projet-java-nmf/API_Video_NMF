@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("videos")
@@ -81,7 +79,7 @@ public class VideoController {
     //GET TOUTES LES VIDEOS PUBLIC
     @GetMapping("/public/{isPrivate}")
     public List<Video> getAllPublicVideos(@PathVariable String isPrivate) {
-        return videoRepository.findByPrivated(isPrivate.equals("false") ? false : true);
+        return videoRepository.findByisPrivate(isPrivate.equals("false") ? false : true);
     }
 
     // ADD CATEGORY TO VIDEO BY Id => addCategoryToVideoByID()

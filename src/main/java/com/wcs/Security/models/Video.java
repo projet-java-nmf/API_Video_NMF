@@ -22,20 +22,31 @@ public class Video {
     private String title;
     private String description;
     private String publicationDate;
-    private boolean privated;
+
+    private boolean isPrivate;
     private boolean hasTeaser;
 
     //JOINTURE MANY TO MANY SIMPLE VIDEO & CATEGORY
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "video_categories",
+            name = "video_category",
             joinColumns = {
                     @JoinColumn(name = "video_id")
             },inverseJoinColumns = {
-            @JoinColumn(name = "category_id")
-    }
+                    @JoinColumn(name = "category_id")
+            }
     )
     private List<Category> categories = new ArrayList<>();
+
+
+    @ManyToMany(mappedBy = "favoritesList")
+    private List<User> users = new ArrayList<>();
+
+
+    @ManyToMany(mappedBy = "videos")
+    private List<Section> sections = new ArrayList<>();
+
+
 
     //L'url de la video : "l'endroit où vous allez stocker la vidéo"
 }

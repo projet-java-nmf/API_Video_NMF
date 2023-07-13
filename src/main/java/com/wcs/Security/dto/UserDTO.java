@@ -1,4 +1,4 @@
-package com.wcs.Security.models;
+package com.wcs.Security.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

@@ -12,6 +12,6 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     Video save(Video video);
     Optional<Video> findById(Long id);
     List<Video>findAll();
-    List<Video>findByPrivated(Boolean privated);
+    List<Video>findByisPrivate(Boolean isPrivate);
     void deleteById(Long id);
 }

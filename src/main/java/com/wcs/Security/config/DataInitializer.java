@@ -2,9 +2,13 @@ package com.wcs.Security.config;
 
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.models.Role;
+import com.wcs.Security.models.User;
 import com.wcs.Security.repositories.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -18,7 +22,8 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         for (RoleName role : RoleName.values()) {
-            roleRepo.save(new Role(null, role));
+          List<User> users = new ArrayList<>();
+            roleRepo.save(new Role(null, role,users));
         }
     }
 }
