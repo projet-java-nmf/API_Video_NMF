@@ -1,5 +1,5 @@
 package com.wcs.Security.enums;
 
 public enum RoleName {
-    ADMIN, USER
+    ADMIN, USER, PREMIUM
 }

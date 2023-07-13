@@ -21,13 +21,14 @@ public class Section {
 
     //JOINTURE MANY TO MANY SECTION & VIDEO
     @ManyToMany (fetch = FetchType.EAGER)
+
     @JoinTable(
-            name = "section_videos",
+            name = "section_video",
             joinColumns = {
-                    @JoinColumn(name = "section_id")
-            },inverseJoinColumns = {
-            @JoinColumn(name = "videos_id")
-    }
+                @JoinColumn(name = "section_id")
+            }, inverseJoinColumns = {
+                @JoinColumn(name = "video_id")
+            }
     )
     private List<Video> videos = new ArrayList<>();
 }
