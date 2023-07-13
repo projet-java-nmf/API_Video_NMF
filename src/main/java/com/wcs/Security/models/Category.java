@@ -1,7 +1,7 @@
 package com.wcs.Security.models;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wcs.Security.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,16 +12,20 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Role {
-
+@AllArgsConstructor
+public class Category {
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private RoleName name;
 
-   @JsonIgnoreProperties("roles")
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+    @Column(
+            unique = true,
+            nullable = false
+    )
+    private String name;
+
+    @JsonIgnoreProperties("category")
+    @ManyToMany(mappedBy = "categories")
+    private List<Video> videos = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package com.wcs.Security.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,9 +33,18 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    @ManyToMany (fetch = FetchType.EAGER)
+    private int verificationEmailCode;
+
+    // Pour les test , on le met a true
+
+    // A ENLEVER !!!!!!!! ou set a true !!!!!!!!
+    private boolean isEmailVerified = true;
+
+    @JsonIgnoreProperties("users")
+    //JOINTURE MANY TO MANY SIMPLE USER & ROLE
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-                    name = "user_roles",
+                    name = "user_role",
                     joinColumns = {
                             @JoinColumn(name = "user_id")
                      },inverseJoinColumns = {
@@ -42,6 +52,18 @@ public class User implements UserDetails {
                      }
             )
     List<Role> roles = new ArrayList<>();
+
+    //JOINTURE USER & VIDEO
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_video",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },inverseJoinColumns = {
+            @JoinColumn(name = "video_id")
+    }
+    )
+    private List<Video> favoritesList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,4 +105,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
