@@ -25,7 +25,7 @@ public class Category {
     )
     private String name;
 
-    @JsonIgnoreProperties("category")
+    @JsonIgnoreProperties("categories")
     @ManyToMany(mappedBy = "categories")
     private List<Video> videos = new ArrayList<>();
 }

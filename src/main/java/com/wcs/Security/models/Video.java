@@ -1,6 +1,7 @@
 package com.wcs.Security.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,8 @@ public class Video {
     private boolean isPrivate;
     private boolean hasTeaser;
 
+
+    @JsonIgnoreProperties("videos")
     //JOINTURE MANY TO MANY SIMPLE VIDEO & CATEGORY
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -39,10 +42,11 @@ public class Video {
     private List<Category> categories = new ArrayList<>();
 
 
+    @JsonIgnoreProperties("favoritesList")
     @ManyToMany(mappedBy = "favoritesList")
     private List<User> users = new ArrayList<>();
 
-
+    @JsonIgnoreProperties("videos")
     @ManyToMany(mappedBy = "videos")
     private List<Section> sections = new ArrayList<>();
 

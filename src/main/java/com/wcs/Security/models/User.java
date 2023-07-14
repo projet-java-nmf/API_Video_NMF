@@ -53,6 +53,7 @@ public class User implements UserDetails {
             )
     List<Role> roles = new ArrayList<>();
 
+    @JsonIgnoreProperties("users")
     //JOINTURE USER & VIDEO
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
