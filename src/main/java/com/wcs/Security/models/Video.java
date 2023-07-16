@@ -21,6 +21,7 @@ public class Video {
 
     private String title;
     private String description;
+    private String linkURL;
     private String publicationDate;
     private boolean privated;
     private boolean hasTeaser;
