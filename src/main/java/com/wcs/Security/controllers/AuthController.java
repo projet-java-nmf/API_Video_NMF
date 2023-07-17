@@ -2,6 +2,7 @@ package com.wcs.Security.controllers;
 
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.UserException;
+import com.wcs.Security.exceptions.UserNotFound;
 import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import org.apache.coyote.Response;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RequestMapping("/auth")
@@ -48,28 +50,15 @@ public class AuthController {
     @PostMapping ("/login")
     public ResponseEntity<?> login (@RequestBody Map<String, String> request){
         try{
-            String response = userService.login(request.get("email"), request.get("password"));
-            if(response == null){
                 return new ResponseEntity<>(
-                        "Email ou le mot de passe sont incorrect",
-                        HttpStatus.UNAUTHORIZED
-                );
-            }
-            if(response.equals("-1") ){
-                return new ResponseEntity<>(
-                        "Vous n'avez pas encore vérifié votre email",
-                        HttpStatus.UNAUTHORIZED
-                );
-            }else{
-                return new ResponseEntity<>(
-                        response,
+                        userService.login(request.get("email"), request.get("password")),
                         HttpStatus.OK
                 );
-
-            }
         }
-        catch(Exception e){
-            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        catch(UserNotFound e){
+            Map <String, Object> errorMsg = new HashMap<>();
+            errorMsg.put("message", "User not found");
+            return new ResponseEntity<>(errorMsg, HttpStatus.NOT_FOUND);
         }
     }
 

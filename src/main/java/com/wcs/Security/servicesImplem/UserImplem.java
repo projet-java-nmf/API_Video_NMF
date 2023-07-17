@@ -1,7 +1,9 @@
 package com.wcs.Security.servicesImplem;
 
+import com.wcs.Security.DTOs.UserDTO;
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.UserException;
+import com.wcs.Security.exceptions.UserNotFound;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
 import com.wcs.Security.models.Video;
@@ -19,9 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Transactional
@@ -96,24 +96,31 @@ public class UserImplem implements UserService {
     }
 
     @Override
-    public String login(String email, String password) throws Exception {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            if (user.get().isEmailVerified()) {
-                authenticationManager
-                        .authenticate(
-                                new UsernamePasswordAuthenticationToken(
-                                        email,
-                                        password
-                                )
-                        );
-                return jwtService.generateToken(user.get());
-            }
-            return "-1";
-
-        } else {
-           throw new Exception();
-        }
+    public Map login(String email, String password) throws UserNotFound {
+        Map <String, Object> result = new HashMap<>();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()-> new UserNotFound()
+        );
+        authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                password
+                        )
+                );
+        result.put("jwt", jwtService.generateToken(user));
+        result.put("user", UserDTO.builder()
+                .firstname(user.getFirstname())
+                .email(user.getEmail())
+                .lastname(user.getLastname())
+                .id(user.getId())
+                .build());
+        List <String> roles = new ArrayList<>();
+        user.getRoles().forEach(
+                role -> roles.add(role.getName().name())
+        );
+        result.put("roles", roles);
+        return result;
     }
 
     @Override
