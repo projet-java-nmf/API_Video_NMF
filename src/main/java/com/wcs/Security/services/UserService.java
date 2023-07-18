@@ -4,9 +4,8 @@ import com.wcs.Security.enums.RoleName;
 
 import com.wcs.Security.exceptions.JwtException;
 import com.wcs.Security.exceptions.UserException;
-
+import com.wcs.Security.exceptions.VideoException;
 import com.wcs.Security.exceptions.UserNotFound;
-
 import com.wcs.Security.models.User;
 import com.wcs.Security.models.Video;
 import jakarta.transaction.Transactional;
@@ -27,7 +26,7 @@ public interface UserService {
     User updateUser(String email, User user);
     @Transactional()
     void deleteUser(String email);
-    List<Video> addVideoToFavorites(Long idVideo, String email);
+    List<Video> addVideoToFavorites(Long idVideo, String email) throws UserException, VideoException;
     boolean emailConfirmation(String email, int code) throws UserException;
 
     boolean resetPasswordRequest(String email) throws UserException;

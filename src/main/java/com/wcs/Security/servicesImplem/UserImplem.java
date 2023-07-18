@@ -4,6 +4,7 @@ import com.wcs.Security.DTOs.UserDTO;
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.JwtException;
 import com.wcs.Security.exceptions.UserException;
+import com.wcs.Security.exceptions.VideoException;
 import com.wcs.Security.exceptions.UserNotFound;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
@@ -252,12 +253,22 @@ public class UserImplem implements UserService {
     }
 
     @Override
-    public List<Video> addVideoToFavorites(Long idVideo, String email) {
-        Optional<User> userInData = userRepository.findByEmail(email);
-        if (userInData.isPresent()) {
-                userInData.get().getFavoritesList().add(videoRepository.findById(idVideo).get());
-                userRepository.save(userInData.get());
-        }
-        return userInData.get().getFavoritesList();
+    public List<Video> addVideoToFavorites(Long idVideo, String email) throws UserException, VideoException {
+        User userInData = userRepository.findByEmail(email).orElseThrow(()-> new UserException("User Not Found"));
+            // Checke si le role est pas présent d'abord
+            List<Video> videos = userInData.getFavoritesList();
+            boolean result = false;
+            for (Video video : videos) {
+                if (video.getId().equals(idVideo)) {
+                    System.out.println("titi");
+                    result = true;
+                    break;
+                }
+            }
+            if(!result){
+                userInData.getFavoritesList().add(videoRepository.findById(idVideo).orElseThrow(()-> new VideoException("Video Not Found")));
+                userRepository.save(userInData);
+            }
+       return userInData.getFavoritesList();
     }
 }
