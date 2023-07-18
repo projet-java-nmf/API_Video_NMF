@@ -1,6 +1,7 @@
 package com.wcs.Security.servicesImplem;
 
 import com.wcs.Security.enums.RoleName;
+import com.wcs.Security.exceptions.JwtException;
 import com.wcs.Security.exceptions.UserException;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
@@ -16,12 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Transactional
@@ -46,7 +46,7 @@ public class UserImplem implements UserService {
     @Override
     public User createUser(User user) throws UserException {
      // Checkif is already created
-
+        System.out.println("COCUCOU");
         Optional<User> userChecked = userRepository.findByEmail(user.getEmail());
         if(userChecked.isPresent()){
             throw  new UserException("L'utilisateur entré existe déja. Veuillez entrez un autre utilisateur .");
@@ -84,51 +84,106 @@ public class UserImplem implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String email, RoleName roleName) throws Exception {
+    public User addRoleToUser(String email, RoleName roleName) throws UserException {
         Optional<Role> role = roleRepository.findByName(roleName);
         Optional<User> user = userRepository.findByEmail(email);
         System.out.println(role.get().getName().name());
         if (role.isPresent() && user.isPresent()) {
             user.get().getRoles().add(role.get());
+            return user.get();
         } else {
-            throw new Exception();
+            throw new UserException("Role or User not found");
         }
     }
 
     @Override
-    public String login(String email, String password) throws Exception {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            if (user.get().isEmailVerified()) {
-                authenticationManager
-                        .authenticate(
-                                new UsernamePasswordAuthenticationToken(
-                                        email,
-                                        password
-                                )
-                        );
-                return jwtService.generateToken(user.get());
-            }
-            return "-1";
-
-        } else {
-           throw new Exception();
+    public Map<String, Object>  login(String email, String password) throws UserException {
+        Map<String, Object> result = new HashMap<>();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException("User Not Found"));
+        if(!user.isEmailVerified()) {
+            throw new UserException("Veuillez valider votre email.\n Consulter votre boite email pour passer cette étape.");
         }
+        try {
+            authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    email,
+                                    password
+                            )
+                    );
+        }
+        catch (AuthenticationException e){
+            throw new UserException("Veuillez entrer de nouveau votre password");
+        }
+       String jwt = jwtService.generateToken(user);
+       List<String> roles = new ArrayList<>();
+       user.getRoles().forEach(role -> roles.add(role.getName().name()));
+       result.put("jwt", jwt);
+       result.put("email", email);
+       result.put("roles", roles);
+        System.out.println("& : "+ user.getGender().name());
+        System.out.println("2 : " + user.getFirstname());
+       result.put("gender", user.getGender().name());
+       result.put("firstname",user.getFirstname());
+       return result;
     }
 
     @Override
-    public boolean emailConfirmation(String email, int code) {
+    public boolean emailConfirmation(String email, int code) throws UserException {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()){
             int codeUser = user.get().getVerificationEmailCode();
+            System.out.println("code :" + code);
+
+            System.out.println("codeUser :" + codeUser);
+
             if(code == codeUser){
                 user.get().setEmailVerified(true);
                 return true;
             }else{
-                return false;
+                throw new UserException("code is incorrect");
             }
+        }else {
+            throw new UserException("User not found");
         }
-        return false;
+
+    }
+
+    @Override
+    public boolean resetPasswordRequest(String email) throws UserException {
+       User user = userRepository.findByEmail(email).orElseThrow(
+               () -> new UserException("User Not Found")
+       );
+       String jwt = jwtService.generateToken(user);
+       StringBuilder sb = new StringBuilder();
+       sb.append("Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant /n");
+       sb.append("http://localhost:4200/reset-password/"+jwt);
+       emailService.sendEmail(
+               email,
+               "Réinitialiation du mot de passe",
+               sb.toString()
+       );
+       return true;
+    }
+
+    @Override
+    public void resetPassword(String token, String password) throws UserException, JwtException {
+       try {
+           String userEmail = jwtService.extractUsername(token);
+           User user = userRepository.findByEmail(userEmail).orElseThrow(
+                   () -> new UserException("User Not Found")
+           );
+           String passwordEncoded = this.passwordEncoder.encode(password);
+           user.setPassword(passwordEncoded);
+       }catch (Exception e){
+           throw new JwtException();
+       }
+    }
+
+    @Override
+    public User getMe(String name) throws UserException {
+       return  userRepository.findByEmail(name).orElseThrow(()-> new UserException("User Not Found"));
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.wcs.Security.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wcs.Security.enums.GenderName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,8 @@ public class User implements UserDetails {
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
 
+
+    private GenderName gender;
     private String firstname;
     private String lastname;
 
@@ -53,6 +56,7 @@ public class User implements UserDetails {
             )
     List<Role> roles = new ArrayList<>();
 
+    @JsonIgnoreProperties("users")
     //JOINTURE USER & VIDEO
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -31,11 +31,10 @@ public class RoleImplem implements RoleService {
 
     @Override
     public List<Role> getRoles() {
-        System.out.println("COCUCO");
-        return roleRepository.findAll();
+           return roleRepository.findAll();
     }
 
-    @Override
+  /*  @Override
     public List<Role> getRolesByUser(Authentication authentication) {
         List<Role> roles = new ArrayList<>();
         Optional<Role> optionalRole;
@@ -47,7 +46,7 @@ public class RoleImplem implements RoleService {
         }
         return roles;
     }
-
+*/
     @Override
     public List<Role> getRolesByUser(Long id) throws UserException {
         List<Role> result = new ArrayList<>();
