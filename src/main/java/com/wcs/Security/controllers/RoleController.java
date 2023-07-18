@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("admin/roles")
@@ -28,9 +25,8 @@ public class RoleController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping("/user")
-    public ResponseEntity<List<RoleDto>> getRolesByUser(@RequestBody Map<String, String> request) {
-
+    @PostMapping("/user")
+    public ResponseEntity<?> getRolesByUser(@RequestBody Map<String, String> request) {
         try {
             return new ResponseEntity<>(
                     convertToListDto(roleService.getRolesByUser(Long.parseLong(request.get("id")))),
@@ -42,7 +38,7 @@ public class RoleController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<RoleDto>> getRoles() {
+    public ResponseEntity<?> getRoles() {
         return new ResponseEntity<>(
                 convertToListDto(roleService.getRoles()),
                 HttpStatus.OK);
@@ -77,10 +73,12 @@ public class RoleController {
         }
     }
 
-    @GetMapping("/users")
+    @PostMapping("/users")
     public ResponseEntity<?> getAllUserByRole(@RequestBody Map<String, String> request) {
         try {
-            return new ResponseEntity<>(roleService.getUsersByRole(request.get("role")), HttpStatus.OK);
+            Map<String , Object> body = new HashMap<>();
+            body.put("response", roleService.getUsersByRole(request.get("role")));
+            return new ResponseEntity<>(body , HttpStatus.OK);
         } catch (RoleException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

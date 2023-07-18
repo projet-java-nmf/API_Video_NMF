@@ -13,7 +13,7 @@ public interface RoleService {
 
 
     List<Role> getRoles ();
-    List<Role> getRolesByUser (Authentication authentication) throws RoleException;
+ /*   List<Role> getRolesByUser (Authentication authentication) throws RoleException;*/
 
     List<Role> getRolesByUser (Long id) throws UserException;
 
