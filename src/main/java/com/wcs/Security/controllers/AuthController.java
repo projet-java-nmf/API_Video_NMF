@@ -6,6 +6,7 @@ import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.JwtException;
 import com.wcs.Security.exceptions.UserException;
 import com.wcs.Security.models.Role;
+import com.wcs.Security.exceptions.UserNotFound;
 import com.wcs.Security.models.User;
 import com.wcs.Security.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +83,19 @@ public class AuthController {
             );
         }
     }
+  
+  /*
+                return new ResponseEntity<>(
+                        userService.login(request.get("email"), request.get("password")),
+                        HttpStatus.OK
+                );
+        }
+        catch(UserNotFound e){
+            Map <String, Object> errorMsg = new HashMap<>();
+            errorMsg.put("message", "User not found");
+            return new ResponseEntity<>(errorMsg, HttpStatus.NOT_FOUND);
+
+  */
 
     @PostMapping("/email-confirmation/{email}")
     private  ResponseEntity<?> emailConfirmation(@PathVariable String email, @RequestBody Map <String , Integer> request) {
@@ -133,6 +148,7 @@ public class AuthController {
                     body,
                     HttpStatus.NOT_FOUND
             );
+
         }
     }
 

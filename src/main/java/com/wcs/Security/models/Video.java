@@ -22,6 +22,7 @@ public class Video {
 
     private String title;
     private String description;
+    private String linkUrl;
     private String publicationDate;
 
     private boolean isPrivate;
