@@ -1,9 +1,11 @@
 package com.wcs.Security.servicesImplem;
 
+import com.wcs.Security.DTOs.UserDTO;
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.JwtException;
 import com.wcs.Security.exceptions.UserException;
 import com.wcs.Security.exceptions.VideoException;
+import com.wcs.Security.exceptions.UserNotFound;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
 import com.wcs.Security.models.Video;
@@ -98,6 +100,7 @@ public class UserImplem implements UserService {
     }
 
     @Override
+
     public Map<String, Object>  login(String email, String password) throws UserException {
         Map<String, Object> result = new HashMap<>();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException("User Not Found"));
@@ -127,6 +130,34 @@ public class UserImplem implements UserService {
        result.put("gender", user.getGender().name());
        result.put("firstname",user.getFirstname());
        return result;
+
+ /*   public Map login(String email, String password) throws UserNotFound {
+        Map <String, Object> result = new HashMap<>();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()-> new UserNotFound()
+        );
+        authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                password
+                        )
+                );
+        result.put("jwt", jwtService.generateToken(user));
+        result.put("user", UserDTO.builder()
+                .firstname(user.getFirstname())
+                .email(user.getEmail())
+                .lastname(user.getLastname())
+                .id(user.getId())
+                .build());
+        List <String> roles = new ArrayList<>();
+        user.getRoles().forEach(
+                role -> roles.add(role.getName().name())
+        );
+        result.put("roles", roles);
+        return result;
+        */
+
     }
 
     @Override
