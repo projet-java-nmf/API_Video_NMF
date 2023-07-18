@@ -2,6 +2,7 @@ package com.wcs.Security.controllers;
 
 import com.wcs.Security.enums.RoleName;
 import com.wcs.Security.exceptions.UserException;
+import com.wcs.Security.exceptions.VideoException;
 import com.wcs.Security.models.Role;
 import com.wcs.Security.models.User;
 import com.wcs.Security.models.Video;
@@ -66,12 +67,27 @@ public class UserController {
 
     @PostMapping("/addVideoToFavorites")
 //    public ResponseEntity<List<Video>> addVideoToFavorites(@RequestBody Long idVideo, Authentication auth){
-    public ResponseEntity<List<Video>> addVideoToFavorites(@RequestBody Map<String, String> request, Authentication auth){
-        System.out.println("long" + request.get("id"));
-        return new ResponseEntity<>(
-                userService.addVideoToFavorites(Long.parseLong(request.get("id")), auth.getName()),
-                HttpStatus.OK
-        );
+    public ResponseEntity<?> addVideoToFavorites(@RequestBody Map<String, String> request, Authentication auth){
+       try{
+           return new ResponseEntity<>(
+                   userService.addVideoToFavorites(Long.parseLong(request.get("id")), auth.getName()),
+                   HttpStatus.OK
+           );
+       }
+       catch(UserException e){
+           return new ResponseEntity<>(
+                   e.getMessage(),
+                   HttpStatus.NOT_FOUND
+           );
+
+       }catch (VideoException e){
+           return new ResponseEntity<>(
+                   e.getMessage(),
+                   HttpStatus.NOT_FOUND
+           );
+       }
+
+
     }
 
     @PutMapping("")
